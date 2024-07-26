@@ -2,13 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameEnd : MonoBehaviour
 {
     public GameObject player;
     public CanvasGroup backgroundWin;
+    public CanvasGroup backgroundLose;
     public float fadeDuration;
+    public float displayImageDuration;
     bool isplayer;
+    bool isCaught;
     float timer;
     // Start is called before the first frame update
     void Start()
@@ -20,7 +24,10 @@ public class GameEnd : MonoBehaviour
     void Update()
     {
         if (isplayer) {
-            EndLevel();
+            EndLevel(backgroundWin, false);
+        }
+        else if (isCaught) {
+            EndLevel(backgroundLose, true);
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -31,11 +38,19 @@ public class GameEnd : MonoBehaviour
         }
     }
 
-    void EndLevel(){
+    void EndLevel(CanvasGroup imgCanvas, bool restart) {
         timer += Time.deltaTime;
-        backgroundWin.alpha = timer / fadeDuration;
-        if (timer > fadeDuration) {
-            Application.Quit();
+        imgCanvas.alpha = timer / fadeDuration;
+        if (timer > fadeDuration + displayImageDuration) {
+            if (restart) {
+                SceneManager.LoadScene(0);
+            }
+            else {
+                Application.Quit();
+            }
         }
+    }
+    public void CaughtPlayer() {
+        isCaught = true;
     }
 }
