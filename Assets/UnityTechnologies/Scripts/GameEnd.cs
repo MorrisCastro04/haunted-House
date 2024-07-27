@@ -8,11 +8,15 @@ public class GameEnd : MonoBehaviour
 {
     public GameObject player;
     public CanvasGroup backgroundWin;
+    public AudioSource winSound;
     public CanvasGroup backgroundLose;
+    public AudioSource loseSound;
+
     public float fadeDuration;
     public float displayImageDuration;
     bool isplayer;
     bool isCaught;
+    bool hasAudioPlayed;
     float timer;
     // Start is called before the first frame update
     void Start()
@@ -24,10 +28,10 @@ public class GameEnd : MonoBehaviour
     void Update()
     {
         if (isplayer) {
-            EndLevel(backgroundWin, false);
+            EndLevel(backgroundWin, false, winSound);
         }
         else if (isCaught) {
-            EndLevel(backgroundLose, true);
+            EndLevel(backgroundLose, true, loseSound);
         }
     }
     private void OnTriggerEnter(Collider other)
@@ -38,7 +42,11 @@ public class GameEnd : MonoBehaviour
         }
     }
 
-    void EndLevel(CanvasGroup imgCanvas, bool restart) {
+    void EndLevel(CanvasGroup imgCanvas, bool restart, AudioSource sound) {
+        if (!hasAudioPlayed) {
+            sound.Play();
+            hasAudioPlayed = true;
+        }
         timer += Time.deltaTime;
         imgCanvas.alpha = timer / fadeDuration;
         if (timer > fadeDuration + displayImageDuration) {

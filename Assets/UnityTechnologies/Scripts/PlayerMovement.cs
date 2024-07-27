@@ -11,16 +11,18 @@ public class PlayerMovement : MonoBehaviour
 
     Animator anim;
     Rigidbody rigid;
+    AudioSource audios;
     
     // Start is called before the first frame update
     void Start()
     {
         anim = GetComponent<Animator>();
         rigid = GetComponent<Rigidbody>();
+        audios = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
@@ -36,6 +38,14 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 desireForward = Vector3.RotateTowards(transform.forward, movement, turnSpeed * Time.deltaTime, 0f);
         rotation = Quaternion.LookRotation(desireForward);
+
+        if (isWalking) {
+            if (!audios.isPlaying) {
+                audios.Play();
+            }
+        } else {
+            audios.Stop();
+        }
     }
 
     private void OnAnimatorMove()
