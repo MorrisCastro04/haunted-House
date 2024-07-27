@@ -33,6 +33,10 @@ public class GameEnd : MonoBehaviour
         else if (isCaught) {
             EndLevel(backgroundLose, true, loseSound);
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Application.Quit();
+        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -54,7 +58,7 @@ public class GameEnd : MonoBehaviour
                 SceneManager.LoadScene(0);
             }
             else {
-                Application.Quit();
+                SceneManager.LoadScene(0);
             }
         }
     }
